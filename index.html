@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="es" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Andromeda Station · Boletos de visita</title>
+    <meta
+      name="description"
+      content="Pasa un día en órbita a bordo de Andromeda Station: despegue, acoplamiento, 16 amaneceres y regreso a la Tierra."
+    />
+
+    <!-- Marca que JS está activo antes de pintar (para las animaciones de entrada) -->
+    <script>document.documentElement.classList.add("js");</script>
+
+    <link rel="icon" type="image/svg+xml" href="images/andromeda-simbolo-color.svg" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe"
+      crossorigin="anonymous"
+    />
+    <!-- Estilos propios: siempre después de Bootstrap para poder sobrescribirlo -->
+    <link href="css/styles.css?v=20261030t" rel="stylesheet" />
+  </head>
+
+  <body>
+    <a class="visually-hidden-focusable" href="#contenido">Saltar al contenido</a>
+
+    <!-- ===================== NAVEGACIÓN ===================== -->
+    <header>
+      <nav class="navbar lg:navbar-expand navbar-translucent fixed-top site-nav" aria-label="Principal">
+        <div class="container">
+          <a class="navbar-brand" href="#inicio">
+            <img
+              class="brand-logo"
+              src="images/andromeda-horizontal-para-fondo-oscuro.svg"
+              alt="Andromeda Station"
+              width="802"
+              height="190"
+            />
+          </a>
+
+          <button
+            class="btn navbar-toggler"
+            type="button"
+            data-bs-toggle="drawer"
+            data-bs-target="#site-menu"
+            aria-controls="site-menu"
+            aria-label="Abrir menú"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <dialog class="drawer drawer-end" id="site-menu" aria-labelledby="site-menu-title">
+            <div class="drawer-header">
+              <h2 class="drawer-title h5" id="site-menu-title">Menú de la misión</h2>
+              <button type="button" class="dialog-close-round is-inline" data-bs-dismiss="drawer" aria-label="Cerrar"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+            </div>
+            <div class="drawer-body">
+              <ul class="navbar-nav lg:ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#despegue">Despegue <small class="nav-time">06:00</small></a></li>
+                <li class="nav-item"><a class="nav-link" href="#estacion">La estación <small class="nav-time">09:00</small></a></li>
+                <li class="nav-item"><a class="nav-link" href="#itinerario">Itinerario <small class="nav-time">10:00</small></a></li>
+                <li class="nav-item"><a class="nav-link" href="#protocolo">Seguridad <small class="nav-time">Protocolo</small></a></li>
+                <li class="nav-item"><a class="nav-link" href="#boletos">Boletos <small class="nav-time">Final</small></a></li>
+              </ul>
+              <button
+                type="button"
+                class="btn btn-solid theme-primary mt-5 lg:mt-0 lg:ms-5"
+                data-bs-toggle="dialog"
+                data-bs-target="#booking"
+              >
+                Reservar
+              </button>
+            </div>
+          </dialog>
+        </div>
+        <!-- Trajectory: how much of the mission (page) you have travelled. Decorative -->
+        <div class="nav-progress" aria-hidden="true"></div>
+      </nav>
+    </header>
+
+    <main id="contenido">
+      <!-- ===================== 0 · HERO · T-MINUS ===================== -->
+      <section class="section hero" id="inicio" aria-labelledby="hero-title">
+        <!-- Background video: decorative, muted, looped. Posters live in CSS (desktop / portrait) -->
+        <div class="hero-media" aria-hidden="true">
+          <video class="hero-video" autoplay muted loop playsinline preload="auto" data-hero-video>
+            <source src="images/hero/hero-earth-mobile.mp4" type="video/mp4" media="(orientation: portrait)" />
+            <source src="images/hero/hero-earth-desktop.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div class="container">
+          <p class="eyebrow">Bitácora 001 · Cuenta regresiva</p>
+          <h1 class="display-title mb-6" id="hero-title">Un día fuera<br />de la Tierra.</h1>
+          <p class="lead-text">
+            Despega al amanecer, flota a 408 km de altura, ve salir el sol dieciséis veces y vuelve a casa
+            antes de medianoche. Esta es la bitácora de tu misión a bordo de Andromeda Station.
+          </p>
+          <div class="d-flex flex-wrap gap-5">
+            <button type="button" class="btn btn-solid theme-primary btn-lg" data-bs-toggle="dialog" data-bs-target="#booking">
+              Reservar mi lugar<i class="bi bi-chevron-right btn-arrow" aria-hidden="true"></i>
+            </button>
+            <a class="btn btn-outline theme-primary btn-lg" href="#despegue">Leer la bitácora<i class="bi bi-chevron-right btn-arrow" aria-hidden="true"></i></a>
+          </div>
+
+          <div class="countdown" data-countdown aria-live="polite">
+            <p class="countdown-label m-0">Próxima ventana de lanzamiento · T-minus</p>
+            <div class="countdown-unit"><span class="countdown-value" data-unit="days">000</span><small>días</small></div>
+            <div class="countdown-unit"><span class="countdown-value" data-unit="hours">00</span><small>horas</small></div>
+            <div class="countdown-unit"><span class="countdown-value" data-unit="minutes">00</span><small>min</small></div>
+            <div class="countdown-unit"><span class="countdown-value" data-unit="seconds">00</span><small>seg</small></div>
+          </div>
+        </div>
+
+        <!-- Accessibility: anything that moves on its own for more than 5s needs a pause control -->
+        <!-- Same container as the rest of the page, so it lines up with "Saltar secuencia" -->
+        <div class="container hero-controls">
+          <button type="button" class="hero-video-toggle" data-video-toggle>
+            <span data-video-label>Pausar</span><span class="visually-hidden"> video de fondo</span>
+            <i class="bi bi-pause-fill icon-pause" aria-hidden="true"></i>
+            <i class="bi bi-play-fill icon-play" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ===================== 1 · 06:00 DESPEGUE ===================== -->
+      <!-- Pinned scene: the stage stays on screen while scrolling moves through the log, one entry at a time.
+           Without JS the steps are simply listed. -->
+      <section class="launch-section" id="despegue" aria-labelledby="launch-title" data-launch-sky>
+        <div class="launch-stage">
+          <!-- Sky that darkens with altitude (colors set by JS while scrolling). Decorative. -->
+          <div class="launch-sky" aria-hidden="true">
+            <img class="launch-photo launch-photo-pad" src="images/launch/launch-1-pad.webp" width="1536" height="1024" alt="" decoding="async" />
+            <img class="launch-photo launch-photo-strato" src="images/launch/launch-2-stratosphere.webp" width="1672" height="940" alt="" loading="lazy" decoding="async" />
+            <div class="launch-sky-stars"></div>
+          </div>
+
+          <div class="container launch-layout">
+            <!-- Progress rail: one tick per log entry (buttons jump to that entry) -->
+            <nav class="launch-rail" aria-label="Momentos del despegue" data-launch-rail>
+              <button type="button" data-goto="0"><span>T−00:10</span></button>
+              <button type="button" data-goto="1"><span>T+00:00</span></button>
+              <button type="button" data-goto="2"><span>T+01:12</span></button>
+              <button type="button" data-goto="3"><span>T+02:30</span></button>
+              <button type="button" data-goto="4"><span>T+03:40</span></button>
+              <button type="button" data-goto="5"><span>T+08:42</span></button>
+            </nav>
+
+            <div class="launch-scene">
+              <!-- Intro: visible before the countdown starts -->
+              <header class="launch-intro" data-launch-intro>
+                <p class="eyebrow">Registro 06:00 · Despegue</p>
+                <h2 id="launch-title">Ocho minutos y cuarenta y dos segundos.</h2>
+                <p class="lead-text">De la plataforma a la órbita. Baja despacio y vívelo desde tu asiento.</p>
+                <p class="launch-hint" aria-hidden="true"><i class="bi bi-arrow-down-circle"></i> Desliza para despegar</p>
+              </header>
+
+              <ol class="launch-sequence" data-launch>
+                <li class="launch-step" data-time="T−00:10" data-alt="0" data-vel="0.0" data-g="1.0">
+                  <p class="launch-time">T−00:10 · Cuenta final</p>
+                  <h3 class="launch-title">Diez, nueve, ocho…</h3>
+                  <p class="launch-text">Silencio en cabina. El piso vibra.</p>
+                  <p class="visually-hidden">Altitud 0 km · velocidad 0 km/s · 1 G</p>
+                </li>
+                <li class="launch-step" data-time="T+00:00" data-alt="0" data-vel="0.0" data-g="1.2">
+                  <p class="launch-time">T+00:00 · Ignición</p>
+                  <h3 class="launch-title">Nueve motores despiertan.</h3>
+                  <p class="launch-text">Un rugido que se siente en el pecho.</p>
+                  <p class="visually-hidden">Altitud 0 km · velocidad 0 km/s · 1.2 G</p>
+                </li>
+                <li class="launch-step" data-time="T+01:12" data-alt="12" data-vel="0.5" data-g="1.6">
+                  <p class="launch-time">T+01:12 · Máxima presión</p>
+                  <h3 class="launch-title">Todo tiembla. Luego, calma.</h3>
+                  <p class="launch-text">Lo más intenso del viaje: dura segundos.</p>
+                  <p class="visually-hidden">Altitud 12 km · velocidad 0.5 km/s · 1.6 G</p>
+                </li>
+                <li class="launch-step" data-time="T+02:30" data-alt="68" data-vel="2.3" data-g="3.0">
+                  <p class="launch-time">T+02:30 · Separación</p>
+                  <h3 class="launch-title">Un golpe seco.</h3>
+                  <p class="launch-text">3 G, tres veces tu peso. El cielo azul se vuelve negro.</p>
+                  <p class="visually-hidden">Altitud 68 km · velocidad 2.3 km/s · 3 G</p>
+                </li>
+                <li class="launch-step" data-time="T+03:40" data-alt="110" data-vel="3.1" data-g="1.2">
+                  <p class="launch-time">T+03:40 · Frontera del espacio</p>
+                  <h3 class="launch-title">Ya eres astronauta.</h3>
+                  <p class="launch-text">Pasas los 100 km: estás en el espacio.</p>
+                  <p class="visually-hidden">Altitud 110 km · velocidad 3.1 km/s · 1.2 G</p>
+                </li>
+                <li class="launch-step is-final" data-time="T+08:42" data-alt="408" data-vel="7.6" data-g="0.0">
+                  <p class="launch-time">T+08:42 · Órbita estable</p>
+                  <h3 class="launch-title">Tu lápiz empieza a flotar.</h3>
+                  <p class="launch-text">Motores apagados. Bienvenido a la ingravidez.</p>
+                  <p class="launch-outro">Desde aquí verás <strong>16 amaneceres</strong> en un solo día.</p>
+                  <p class="visually-hidden">Altitud 408 km · velocidad 7.6 km/s · 0 G</p>
+                </li>
+              </ol>
+            </div>
+
+            <!-- Live telemetry HUD (decorative: the same data is in each step for screen readers) -->
+            <aside class="telemetry" data-telemetry aria-label="Telemetría del despegue" aria-hidden="true">
+              <p class="telemetry-status"><span class="telemetry-dot"></span><span data-tel="status">Telemetría · En vivo</span></p>
+              <p class="telemetry-clock" data-tel="time">T−00:10</p>
+              <div class="telemetry-main">
+                <span class="telemetry-label">Altitud</span>
+                <p class="telemetry-value"><span data-tel="alt">0</span><small>km</small></p>
+              </div>
+              <div class="telemetry-row">
+                <div>
+                  <span class="telemetry-label">Velocidad</span>
+                  <p class="telemetry-value-sm"><span data-tel="vel">0.0</span><small>km/s</small></p>
+                </div>
+                <div>
+                  <span class="telemetry-label">Fuerza G</span>
+                  <p class="telemetry-value-sm"><span data-tel="g">1.0</span><small>G</small></p>
+                </div>
+              </div>
+              <!-- G-force curve of the whole ascent; the lit part follows your scroll (drawn by JS) -->
+              <figure class="g-chart">
+                <figcaption><span>Fuerza G · ascenso</span><span>1 G = tu peso en la Tierra</span></figcaption>
+                <svg viewBox="0 0 300 96" data-g-chart>
+                  <line class="g-grid" x1="22" x2="300" y1="62" y2="62" />
+                  <line class="g-grid" x1="22" x2="300" y1="14" y2="14" />
+                  <text class="g-axis" x="0" y="66">1G</text>
+                  <text class="g-axis" x="0" y="18">3G</text>
+                  <text class="g-axis" x="0" y="90">0G</text>
+                  <path class="g-curve-all" data-g-all d="" />
+                  <path class="g-curve-done" data-g-done d="" />
+                  <circle class="g-dot" data-g-dot r="4" cx="22" cy="62" />
+                </svg>
+              </figure>
+              <p class="telemetry-note">1 G = tu peso en la Tierra</p>
+              <div class="telemetry-bar"><span data-tel="bar"></span></div>
+            </aside>
+
+            <a class="launch-skip" href="#estacion">Saltar secuencia <i class="bi bi-chevron-double-down" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 2 · 09:00 ACOPLAMIENTO ===================== -->
+      <section class="section blueprint" id="estacion" aria-labelledby="station-title" data-blueprint>
+        <div class="container">
+          <header class="section-header reveal">
+            <p class="eyebrow">Registro 09:00 · Acoplamiento</p>
+            <h2 id="station-title">Se abre la escotilla. Estás a bordo.</h2>
+            <p class="lead-text">Cuatro módulos conectados que serán tu casa durante doce horas.</p>
+          </header>
+
+          <!-- Station plan: top-down technical drawing of the ship. Decorative; hovering a card lights its compartment -->
+          <svg class="station-plan reveal" viewBox="0 0 1200 230" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="plan-flare-gradient">
+                <stop class="plan-flare-edge" offset="0"/>
+                <stop class="plan-flare-core" offset="0.5"/>
+                <stop class="plan-flare-edge" offset="1"/>
+              </linearGradient>
+            </defs>
+            <!-- Hull: nose (left) → engine (right). Top-down technical drawing based on the ship reference -->
+            <g class="plan-hull">
+              <path d="M10 105 C26 74 70 58 150 56 L1044 56 C1074 56 1090 48 1112 36 L1136 24 L1142 62 L1150 74 L1150 136 L1142 148 L1136 186 L1112 174 C1090 162 1074 154 1044 154 L150 154 C70 152 26 136 10 105 Z"/>
+              <path class="plan-hull-line" d="M1044 62 L1136 80 M1044 148 L1136 130 M1050 92 L1144 98 M1050 118 L1144 112 M1038 62 L1038 148 M40 105 L70 105"/>
+              <rect x="1150" y="86" width="16" height="38" rx="3"/><path d="M1166 82 L1192 76 L1192 134 L1166 128 Z"/><path class="plan-hull-line" d="M1174 80 V130 M1183 78 V132"/>
+            </g>
+            <!-- Docking hatch (where visitors come in), on the upper hull between Hábitat and Galería G0 -->
+            <g class="plan-port">
+              <rect x="521" y="44" width="20" height="14" rx="3"/>
+              <path class="plan-port-lead" d="M531 44 V30 H567"/>
+              <text class="plan-here" x="573" y="34">ESTÁS AQUÍ · ESCOTILLA</text>
+            </g>
+            <!-- Mod 01 · Cúpula -->
+            <g class="plan-module" data-plan="0">
+  <path class="plan-shell" d="M84 70 L290 68 L300 78 L300 132 L290 142 L84 140 C54 132 46 78 84 70 Z"/><g transform="translate(24 0)">
+  <circle class="plan-light" cx="126" cy="108" r="30"/>
+  <circle class="plan-detail" cx="126" cy="108" r="36"/>
+  <circle class="plan-star" cx="118" cy="94" r="1.1"/><circle class="plan-star" cx="131" cy="112" r="1.1"/><circle class="plan-star" cx="110" cy="118" r="1.1"/><circle class="plan-star" cx="140" cy="96" r="1.1"/><circle class="plan-star" cx="124" cy="125" r="1.1"/><circle class="plan-star" cx="146" cy="117" r="1.1"/><circle class="plan-star" cx="104" cy="104" r="1.1"/>
+  <path class="plan-detail" d="M172 112 L204 96 M200 92 L210 100 L206 106 L196 98 Z"/>
+  <circle class="plan-detail" cx="176" cy="114" r="5"/>
+  <path class="plan-detail" d="M214 120 h22 v14 h-22 Z M214 76 h22 v14 h-22 Z"/>
+  <path class="plan-detail" d="M240 80 v50"/></g>
+              <rect class="plan-flare plan-flare-top" x="120" y="66.75" width="73" height="2.5" rx="1.25"/><rect class="plan-flare plan-flare-bottom" x="202" y="140.75" width="73" height="2.5" rx="1.25"/>
+              <text x="190" y="186" text-anchor="middle">MOD 01 · CÚPULA</text>
+            </g>
+            <!-- Mod 02 · Hábitat -->
+            <g class="plan-module" data-plan="1">
+  <path class="plan-shell" d="M324 68 L514 68 L524 78 L524 132 L514 142 L324 142 L314 132 L314 78 Z"/><g transform="translate(88 0)">
+  <path class="plan-detail" d="M284 80 L378 80 L384 86 L384 124 L378 130 L284 130 L278 124 L278 86 Z"/>
+  <rect class="plan-detail" x="306" y="88" width="50" height="34" rx="3"/>
+  <path class="plan-detail" d="M306 96 h50 M318 88 v-0 "/>
+  <rect class="plan-light" x="312" y="100" width="38" height="18" rx="2"/>
+  <rect class="plan-detail" x="364" y="96" width="12" height="18" rx="2"/>
+  <path class="plan-detail" d="M286 84 v42 M292 84 v42"/></g>
+              <rect class="plan-flare plan-flare-top" x="339" y="66.75" width="76" height="2.5" rx="1.25"/><rect class="plan-flare plan-flare-bottom" x="423" y="140.75" width="76" height="2.5" rx="1.25"/>
+              <text x="419" y="186" text-anchor="middle">MOD 02 · HÁBITAT</text>
+            </g>
+            <!-- Mod 03 · Galería G0 -->
+            <g class="plan-module" data-plan="2">
+  <path class="plan-shell" d="M548 68 L796 68 L806 78 L806 132 L796 142 L548 142 L538 132 L538 78 Z"/><g transform="translate(141 0)">
+  <path class="plan-detail" d="M486 84 C452 84 440 96 440 108 C440 120 452 126 470 126 L486 126 L486 116 L472 116 C460 116 454 112 454 106 C454 100 462 94 486 94 Z"/>
+  <ellipse class="plan-detail" cx="502" cy="105" rx="7" ry="12"/>
+  <ellipse class="plan-light" cx="562" cy="105" rx="20" ry="10"/>
+  <circle class="plan-detail" cx="552" cy="88" r="4"/><circle class="plan-detail" cx="572" cy="88" r="4"/><circle class="plan-detail" cx="552" cy="122" r="4"/><circle class="plan-detail" cx="572" cy="122" r="4"/><circle class="plan-detail" cx="536" cy="105" r="4"/><circle class="plan-detail" cx="588" cy="105" r="4"/><circle class="plan-light plan-dot" cx="426" cy="80" r="3"/><circle class="plan-light plan-dot" cx="470" cy="128" r="3"/><circle class="plan-light plan-dot" cx="620" cy="80" r="3"/>
+  <path class="plan-detail" d="M612 92 v26 M606 92 h12 M606 118 h12"/>
+  <path class="plan-detail" d="M630 74 v62 M640 74 v62"/>
+  <rect class="plan-light" x="632" y="86" width="6" height="38" rx="1"/></g>
+              <rect class="plan-flare plan-flare-top" x="570" y="66.75" width="96" height="2.5" rx="1.25"/><rect class="plan-flare plan-flare-bottom" x="677" y="140.75" width="96" height="2.5" rx="1.25"/>
+              <text x="672" y="186" text-anchor="middle">MOD 03 · GALERÍA G0</text>
+            </g>
+            <!-- Mod 04 · Laboratorio -->
+            <g class="plan-module" data-plan="3">
+  <path class="plan-shell" d="M830 68 L1020 68 L1030 78 L1030 132 L1020 142 L830 142 L820 132 L820 78 Z"/><g transform="translate(163 0)">
+  <rect class="plan-detail" x="680" y="78" width="54" height="16" rx="2"/>
+  <rect class="plan-light" x="690" y="81" width="14" height="10" rx="1"/><rect class="plan-light" x="710" y="81" width="14" height="10" rx="1"/>
+  <rect class="plan-detail" x="700" y="100" width="70" height="24" rx="3"/>
+  <rect class="plan-light" x="712" y="105" width="22" height="14" rx="1"/><rect class="plan-light" x="740" y="105" width="14" height="14" rx="1"/>
+  <rect class="plan-detail" x="744" y="76" width="34" height="14" rx="2"/>
+  <rect class="plan-detail" x="680" y="128" width="80" height="8" rx="2"/>
+  <rect class="plan-detail" x="804" y="80" width="26" height="48" rx="12"/>
+  <rect class="plan-light" x="810" y="88" width="14" height="32" rx="7"/>
+  <rect class="plan-detail" x="838" y="112" width="14" height="20" rx="2"/></g>
+              <rect class="plan-flare plan-flare-top" x="845" y="66.75" width="76" height="2.5" rx="1.25"/><rect class="plan-flare plan-flare-bottom" x="929" y="140.75" width="76" height="2.5" rx="1.25"/>
+              <text x="925" y="186" text-anchor="middle">MOD 04 · LABORATORIO</text>
+            </g>
+          </svg>
+
+          <div class="row g-7 row-cols-1 md:row-cols-2 xl:row-cols-4">
+            <div class="col reveal">
+              <article class="card module-card" data-module data-detail="Siete ventanas de cuarzo apuntando a la Tierra. Aquí vives el amanecer de las 15:00, la cena del atardecer y el mensaje a casa." data-facts="Ventanas:7|Capacidad:6 personas|En tu itinerario:15:00 · 17:30 · 19:00">
+                <div class="module-media">
+                  <img class="module-img" src="images/registro/module-cupola-800.webp" srcset="images/registro/module-cupola-800.webp 800w, images/registro/module-cupola-1400.webp 1400w" sizes="(width >= 1280px) 300px, (width >= 768px) 50vw, 100vw" width="800" height="446" loading="lazy" decoding="async" alt="Sala de observación con una gran ventana circular hacia la Tierra, un telescopio y sillones" />
+                  <span class="module-zoom" aria-hidden="true"><i class="bi bi-arrows-angle-expand"></i></span>
+                </div>
+                <div class="card-body">
+                  <span class="module-code">MÓDULO 01</span>
+                  <h3 class="card-title">
+                    <!-- The button covers the whole card (stretched) and opens the viewer -->
+                    <button type="button" class="module-open" data-module-open="0" data-bs-toggle="dialog" data-bs-target="#module-viewer">Cúpula<span class="visually-hidden"> · ver en grande</span></button>
+                  </h3>
+                  <p class="card-text">Siete ventanas panorámicas apuntando a la Tierra. El mejor asiento del sistema solar.</p>
+                </div>
+              </article>
+            </div>
+            <div class="col reveal">
+              <article class="card module-card" data-module data-detail="Cabinas privadas con ventana, comedor y la cocina de la estación. Aquí empieza tu día con el briefing y aquí te preparas para volver." data-facts="Cabinas:6 privadas|Capacidad:12 personas|En tu itinerario:10:00 · 13:00 · 20:15">
+                <div class="module-media">
+                  <img class="module-img" src="images/registro/module-habitat-800.webp" srcset="images/registro/module-habitat-800.webp 800w, images/registro/module-habitat-1400.webp 1400w" sizes="(width >= 1280px) 300px, (width >= 768px) 50vw, 100vw" width="800" height="446" loading="lazy" decoding="async" alt="Cabina privada con cama y una ventana panorámica hacia las luces de la Tierra de noche" />
+                  <span class="module-zoom" aria-hidden="true"><i class="bi bi-arrows-angle-expand"></i></span>
+                </div>
+                <div class="card-body">
+                  <span class="module-code">MÓDULO 02</span>
+                  <h3 class="card-title">
+                    <!-- The button covers the whole card (stretched) and opens the viewer -->
+                    <button type="button" class="module-open" data-module-open="1" data-bs-toggle="dialog" data-bs-target="#module-viewer">Hábitat<span class="visually-hidden"> · ver en grande</span></button>
+                  </h3>
+                  <p class="card-text">Cabinas privadas, comedor y la cocina donde aprenderás a comer sin que nada se escape.</p>
+                </div>
+              </article>
+            </div>
+            <div class="col reveal">
+              <article class="card module-card" data-module data-detail="La sala social de la estación: sillones curvos frente a la ventana más grande a bordo, luz cálida y un brindis con la Tierra de fondo. Aquí flotas, platicas con la tripulación y descansas entre actividades." data-facts="Ventana:panorámica|Capacidad:8 personas|En tu itinerario:11:30">
+                <div class="module-media">
+                  <img class="module-img" src="images/registro/module-gallery-800.webp" srcset="images/registro/module-gallery-800.webp 800w, images/registro/module-gallery-1400.webp 1400w" sizes="(width >= 1280px) 300px, (width >= 768px) 50vw, 100vw" width="800" height="446" loading="lazy" decoding="async" alt="Sala panorámica con sillones curvos frente a una ventana que muestra el amanecer sobre la Tierra" />
+                  <span class="module-zoom" aria-hidden="true"><i class="bi bi-arrows-angle-expand"></i></span>
+                </div>
+                <div class="card-body">
+                  <span class="module-code">MÓDULO 03</span>
+                  <h3 class="card-title">
+                    <!-- The button covers the whole card (stretched) and opens the viewer -->
+                    <button type="button" class="module-open" data-module-open="2" data-bs-toggle="dialog" data-bs-target="#module-viewer">Galería G0<span class="visually-hidden"> · ver en grande</span></button>
+                  </h3>
+                  <p class="card-text">La sala panorámica de la estación: sillones frente a la Tierra y un brindis en gravedad cero.</p>
+                </div>
+              </article>
+            </div>
+            <div class="col reveal">
+              <article class="card module-card" data-module data-detail="Experimentos reales de la tripulación científica y un cultivo de cristales que tú mismo operas y te llevas a casa." data-facts="Experimentos:14 activos|Capacidad:4 personas|En tu itinerario:16:30">
+                <div class="module-media">
+                  <img class="module-img" src="images/registro/module-lab-800.webp" srcset="images/registro/module-lab-800.webp 800w, images/registro/module-lab-1400.webp 1400w" sizes="(width >= 1280px) 300px, (width >= 768px) 50vw, 100vw" width="800" height="446" loading="lazy" decoding="async" alt="Laboratorio iluminado con cultivos de plantas, instrumentos y una ventana al espacio" />
+                  <span class="module-zoom" aria-hidden="true"><i class="bi bi-arrows-angle-expand"></i></span>
+                </div>
+                <div class="card-body">
+                  <span class="module-code">MÓDULO 04</span>
+                  <h3 class="card-title">
+                    <!-- The button covers the whole card (stretched) and opens the viewer -->
+                    <button type="button" class="module-open" data-module-open="3" data-bs-toggle="dialog" data-bs-target="#module-viewer">Laboratorio Orión<span class="visually-hidden"> · ver en grande</span></button>
+                  </h3>
+                  <p class="card-text">Experimentos reales de la tripulación científica, y uno que tú mismo vas a operar.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 3 · 10:00–19:00 VIDA EN ÓRBITA · ORBIT CLOCK ===================== -->
+      <section class="section starfield starfield-twinkle" id="itinerario" aria-labelledby="itinerary-title">
+        <div class="container">
+          <div class="orbit" data-orbit>
+            <!-- Heading lives inside the grid: top on mobile, right column on desktop -->
+            <header class="orbit-head reveal">
+              <p class="eyebrow">Registros 10:00 – 20:15 · En órbita</p>
+              <h2 id="itinerary-title" class="orbit-heading">Doce horas que vas a recordar toda la vida.</h2>
+              <p class="body-text">Una vuelta a la Tierra cada 92 minutos. Recorre tu día, órbita por órbita.</p>
+            </header>
+
+            <!-- Visual group: clock + legend + controls (one column on desktop) -->
+            <div class="orbit-visual">
+              <!-- Clock: tilted orbit drawn by JS (like the logo). Decorative: the text lives in the slides -->
+              <div class="orbit-dial" aria-hidden="true">
+                <svg class="orbit-svg" data-orbit-svg></svg>
+                <div class="orbit-center">
+                  <span class="orbit-center-time" data-orbit-time>15:00</span>
+                  <span class="orbit-center-tag" data-orbit-tag>Amanecer nº 7</span>
+                </div>
+              </div>
+              <div class="orbit-legend" aria-hidden="true">
+                <span><i class="is-day"></i>Día</span>
+                <span><i class="is-night"></i>Noche</span>
+                <span><i class="is-route"></i>Tu recorrido</span>
+              </div>
+
+              <div class="orbit-controls">
+                <button type="button" class="orbit-arrow" data-orbit-prev aria-label="Registro anterior">
+                  <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                </button>
+                <div class="orbit-dots">
+                  <button type="button" class="orbit-dot" data-orbit-go="0" aria-label="Ir al registro de las 10:00"></button>
+                  <button type="button" class="orbit-dot" data-orbit-go="1" aria-label="Ir al registro de las 11:30"></button>
+                  <button type="button" class="orbit-dot" data-orbit-go="2" aria-label="Ir al registro de las 13:00"></button>
+                  <button type="button" class="orbit-dot" data-orbit-go="3" aria-label="Ir al registro de las 15:00"></button>
+                  <button type="button" class="orbit-dot" data-orbit-go="4" aria-label="Ir al registro de las 16:30"></button>
+                  <button type="button" class="orbit-dot" data-orbit-go="5" aria-label="Ir al registro de las 17:30"></button>
+                  <button type="button" class="orbit-dot" data-orbit-go="6" aria-label="Ir al registro de las 19:00"></button>
+                  <button type="button" class="orbit-dot" data-orbit-go="7" aria-label="Ir al registro de las 20:15"></button>
+                  <!-- Autoplay toggle (WCAG 2.2.2: moving content needs a pause control) -->
+                  <button type="button" class="orbit-play" data-orbit-play aria-label="Pausar recorrido automático">
+                    <i class="bi bi-pause-fill icon-pause" aria-hidden="true"></i>
+                    <i class="bi bi-play-fill icon-play" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <button type="button" class="orbit-arrow" data-orbit-next aria-label="Registro siguiente">
+                  <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="orbit-info" data-orbit-info aria-live="polite">
+              <ol class="orbit-slides">
+                <li class="orbit-slide" data-hour="10.0" data-time="10:00" data-tagline="Primeros movimientos">
+                  <p class="orbit-slide-time">Registro <time datetime="10:00">10:00</time> · Órbita 1 de 8</p>
+                  <h3 class="orbit-slide-title">Briefing de bienvenida</h3>
+                  <p class="orbit-slide-text">Aprendes a moverte con las manos, dónde agarrarte y cómo frenar sin chocar con nadie.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Hábitat</dd></div>
+                    <div><dt>Duración</dt><dd>60 min</dd></div>
+                  </dl>
+                </li>
+                <li class="orbit-slide" data-hour="11.5" data-time="11:30" data-tagline="Gravedad cero">
+                  <p class="orbit-slide-time">Registro <time datetime="11:30">11:30</time> · Órbita 2 de 8</p>
+                  <h3 class="orbit-slide-title">Primer vuelo libre</h3>
+                  <p class="orbit-slide-text">Brindis de bienvenida en la Galería G0 y tu primera media hora flotando frente a la ventana panorámica.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Galería G0</dd></div>
+                    <div><dt>Duración</dt><dd>30 min</dd></div>
+                  </dl>
+                </li>
+                <li class="orbit-slide" data-hour="13.0" data-time="13:00" data-tagline="Hora de comer">
+                  <p class="orbit-slide-time">Registro <time datetime="13:00">13:00</time> · Órbita 3 de 8</p>
+                  <h3 class="orbit-slide-title">Comida en microgravedad</h3>
+                  <p class="orbit-slide-text">Menú del chef de la estación, servido en bolsas, tortillas y una esfera de agua flotante.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Hábitat</dd></div>
+                    <div><dt>Duración</dt><dd>60 min</dd></div>
+                  </dl>
+                </li>
+                <li class="orbit-slide is-active" data-hour="15.0" data-time="15:00" data-tagline="Amanecer nº 7">
+                  <p class="orbit-slide-time">Registro <time datetime="15:00">15:00</time> · Órbita 4 de 8</p>
+                  <h3 class="orbit-slide-title">Amanecer número siete</h3>
+                  <p class="orbit-slide-text">Desde la Cúpula: una línea azul delgadísima se enciende sobre el horizonte. Silencio total.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Cúpula</dd></div>
+                    <div><dt>Duración</dt><dd>45 min</dd></div>
+                  </dl>
+                </li>
+                <li class="orbit-slide" data-hour="16.5" data-time="16:30" data-tagline="Ciencia a bordo">
+                  <p class="orbit-slide-time">Registro <time datetime="16:30">16:30</time> · Órbita 5 de 8</p>
+                  <h3 class="orbit-slide-title">Tu experimento</h3>
+                  <p class="orbit-slide-text">En el Laboratorio Orión operas un cultivo de cristales que volverá contigo a la Tierra.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Laboratorio Orión</dd></div>
+                    <div><dt>Duración</dt><dd>60 min</dd></div>
+                  </dl>
+                </li>
+                <li class="orbit-slide" data-hour="17.5" data-time="17:30" data-tagline="Atardecer">
+                  <p class="orbit-slide-time">Registro <time datetime="17:30">17:30</time> · Órbita 6 de 8</p>
+                  <h3 class="orbit-slide-title">Atardecer con cena</h3>
+                  <p class="orbit-slide-text">La cena se sirve en la Cúpula mientras el Sol se esconde detrás del borde de la Tierra.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Cúpula</dd></div>
+                    <div><dt>Duración</dt><dd>60 min</dd></div>
+                  </dl>
+                </li>
+                <li class="orbit-slide" data-hour="19.0" data-time="19:00" data-tagline="Llamada a la Tierra">
+                  <p class="orbit-slide-time">Registro <time datetime="19:00">19:00</time> · Órbita 7 de 8</p>
+                  <h3 class="orbit-slide-title">Mensaje a casa</h3>
+                  <p class="orbit-slide-text">Grabas un video para quien tú quieras con el planeta entero como fondo.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Cúpula</dd></div>
+                    <div><dt>Duración</dt><dd>30 min</dd></div>
+                  </dl>
+                </li>
+                <li class="orbit-slide" data-hour="20.25" data-time="20:15" data-tagline="Rumbo a casa">
+                  <p class="orbit-slide-time">Registro <time datetime="20:15">20:15</time> · Órbita 8 de 8</p>
+                  <h3 class="orbit-slide-title">Preparación para el regreso</h3>
+                  <p class="orbit-slide-text">Te pones el traje, guardas tu cristal del experimento y das una última mirada por la ventana.</p>
+                  <dl class="orbit-slide-meta">
+                    <div><dt>Lugar</dt><dd>Hábitat</dd></div>
+                    <div><dt>Duración</dt><dd>40 min</dd></div>
+                  </dl>
+                </li>
+              </ol>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 4 · 21:00 REGRESO ===================== -->
+      <section class="section quote-section starfield" id="regreso" aria-labelledby="return-title">
+        <!-- Decorative background with parallax (moved by JS, disabled with reduced motion) -->
+        <div class="quote-media" aria-hidden="true">
+          <img
+            class="quote-img"
+            src="images/quote/quote-ship-window-800.webp"
+            srcset="images/quote/quote-ship-window-800.webp 800w, images/quote/quote-ship-window-1374.webp 1374w"
+            sizes="(width >= 1024px) 55vw, 100vw"
+            width="1374"
+            height="1146"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            data-parallax
+          />
+        </div>
+        <div class="container quote-content reveal">
+          <p class="eyebrow">Registro 21:00 · Regreso a casa</p>
+          <h2 id="return-title" class="visually-hidden">El regreso</h2>
+          <figure class="quote-figure">
+            <!-- Words light up one by one while scrolling (JS splits them; without JS the text is fully visible) -->
+            <blockquote class="quote" data-quote-write>
+              <p>“Desde allá arriba no se ven fronteras. Solo una casa muy pequeña y muy frágil.”</p>
+            </blockquote>
+            <figcaption class="quote-cite">— Bitácora de un visitante · Misión&nbsp;214</figcaption>
+          </figure>
+          <p class="lead-text quote-lead">
+            Los astronautas lo llaman <em>efecto perspectiva</em>. Tú lo vas a sentir en el viaje de regreso,
+            cuando la nave entre en la atmósfera y el cielo vuelva a ser azul.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================== 5 · PROTOCOLO DE SEGURIDAD ===================== -->
+      <section class="section" id="protocolo" aria-labelledby="safety-title">
+        <div class="container">
+          <header class="section-header reveal">
+            <p class="eyebrow">Protocolo · Antes de abordar</p>
+            <h2 id="safety-title">No necesitas ser astronauta. Nosotros te preparamos.</h2>
+            <p class="body-text">Toca cada punto para inspeccionar tu misión.</p>
+          </header>
+
+          <div class="hotspots reveal" data-hotspots>
+            <div class="hotspot-stage">
+              <picture>
+                <source media="(width < 768px)" srcset="images/protocol/protocol-mobile-900.webp" width="900" height="1118" />
+                <img
+                  class="hotspot-img"
+                  src="images/protocol/protocol-desktop-1400.webp"
+                  srcset="images/protocol/protocol-desktop-1400.webp 1400w, images/protocol/protocol-desktop-2400.webp 2400w"
+                  sizes="(width >= 1320px) 1296px, 100vw"
+                  width="1400"
+                  height="782"
+                  alt="Visitante con traje de vuelo de pie junto a la cápsula de Andromeda Station en el hangar de lanzamiento"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
+              <button type="button" class="hotspot is-active" data-hotspot="1" aria-controls="protocol-1" aria-expanded="true" aria-label="Punto 1: Revisión médica">
+                <span aria-hidden="true">1</span>
+              </button>
+              <button type="button" class="hotspot" data-hotspot="2" aria-controls="protocol-2" aria-expanded="false" aria-label="Punto 2: Nave certificada">
+                <span aria-hidden="true">2</span>
+              </button>
+              <button type="button" class="hotspot" data-hotspot="3" aria-controls="protocol-3" aria-expanded="false" aria-label="Punto 3: Tripulación 1 : 2">
+                <span aria-hidden="true">3</span>
+              </button>
+              <button type="button" class="hotspot" data-hotspot="4" aria-controls="protocol-4" aria-expanded="false" aria-label="Punto 4: 3 días de entrenamiento">
+                <span aria-hidden="true">4</span>
+              </button>
+            </div>
+
+            <!-- Desktop: the active card floats next to its point. Mobile: full list under the image. -->
+            <ol class="hotspot-list">
+              <li class="hotspot-card is-active" id="protocol-1" data-zone="crew" data-hotspot-card="1">
+                <span class="hotspot-num" aria-hidden="true">1</span>
+                <div>
+                  <p class="hotspot-kicker">Protocolo · Punto 1</p>
+                  <h3>Revisión médica</h3>
+                  <p>Biosensores en tu traje vigilan pulso y oxígeno todo el vuelo. Antes, solo un chequeo general.</p>
+                  <p class="hotspot-stat">60<small>días antes</small></p>
+                </div>
+              </li>
+              <li class="hotspot-card" id="protocol-2" data-zone="ship" data-hotspot-card="2">
+                <span class="hotspot-num" aria-hidden="true">2</span>
+                <div>
+                  <p class="hotspot-kicker">Protocolo · Punto 2</p>
+                  <h3>Nave certificada</h3>
+                  <p>Sistema de escape en cada fase del vuelo: la cápsula se separa del cohete y te trae de vuelta a salvo.</p>
+                  <p class="hotspot-stat">3×<small>soporte vital</small></p>
+                </div>
+              </li>
+              <li class="hotspot-card" id="protocol-3" data-zone="ship" data-hotspot-card="3">
+                <span class="hotspot-num" aria-hidden="true">3</span>
+                <div>
+                  <p class="hotspot-kicker">Protocolo · Punto 3</p>
+                  <h3>Tripulación 1 : 2</h3>
+                  <p>Un comandante de cabina por cada dos visitantes, desde que subes a la cápsula hasta que vuelves a tierra.</p>
+                  <p class="hotspot-stat">1 : 2<small>guía por visitantes</small></p>
+                </div>
+              </li>
+              <li class="hotspot-card" id="protocol-4" data-zone="crew" data-hotspot-card="4">
+                <span class="hotspot-num" aria-hidden="true">4</span>
+                <div>
+                  <p class="hotspot-kicker">Protocolo · Punto 4</p>
+                  <h3>3 días de entrenamiento</h3>
+                  <p>Centrífuga, vuelo parabólico y simulador de cabina en nuestro centro. Llegas al despegue sabiendo qué sentir.</p>
+                  <p class="hotspot-stat">3<small>días</small></p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== 6 · BOLETOS · PASES DE ABORDAR ===================== -->
+      <section class="section tickets-section" id="boletos" aria-labelledby="tickets-title">
+        <div class="tickets-bg" aria-hidden="true">
+          <img src="images/quote/quote-andromeda-1200.webp" srcset="images/quote/quote-andromeda-1200.webp 1200w, images/quote/quote-andromeda-2000.webp 2000w" sizes="100vw" width="2000" height="1116" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="container">
+          <header class="section-header text-center reveal">
+            <p class="eyebrow">Registro final · Elige tu misión</p>
+            <h2 id="tickets-title">Tres maneras de pasar un día en órbita.</h2>
+            <p class="lead-text mx-auto">Todas incluyen entrenamiento, traje de vuelo, transporte y seguro de misión.</p>
+            <p class="tickets-window">
+              <i class="bi bi-clock-history" aria-hidden="true"></i>
+              <span>Próxima ventana</span>
+              <b><time datetime="2027-03-14T06:00-06:00">14 Mar 2027 · 06:00</time></b>
+              <span>T−<span data-tickets-days>137</span> días</span>
+            </p>
+          </header>
+
+          <!-- Mobile: pick one mission, see one pass. Desktop: the three passes side by side -->
+          <div class="tickets-picker" role="tablist" aria-label="Elige tu misión">
+            <button type="button" class="tickets-pick" id="pick-explorador" role="tab" aria-selected="false" aria-controls="pass-explorador" data-pick="1">
+              <span>Explorador</span><b>$250K</b>
+            </button>
+            <button type="button" class="tickets-pick is-active" id="pick-comandante" role="tab" aria-selected="true" aria-controls="pass-comandante" data-pick="2">
+              <span>Comandante</span><b>$420K</b><em>Más elegida</em>
+            </button>
+            <button type="button" class="tickets-pick" id="pick-cupula" role="tab" aria-selected="false" aria-controls="pass-cupula" data-pick="3">
+              <span>Cúpula</span><b>$780K</b>
+            </button>
+          </div>
+
+          <div class="tickets-grid reveal" data-tickets>
+            <article class="pass" id="pass-explorador" data-pass="1" role="tabpanel" aria-labelledby="pick-explorador">
+              <div class="pass-top">
+                <div class="pass-row">
+                  <span class="pass-tier"><i class="bi bi-rocket-takeoff" aria-hidden="true"></i> Misión 01</span>
+                </div>
+                <h3 class="pass-name">Explorador</h3>
+                <p class="pass-tag">El día completo a bordo, en grupo.</p>
+                <p class="pass-price">$250,000<small>USD</small></p>
+                <p class="pass-deposit">Apartas con $25,000 (10 %)</p>
+                <div class="pass-seats">
+                  <p class="pass-seats-label"><span>Lugares en esta ventana</span><span>Quedan <b>4 de 6</b></span></p>
+                  <div class="pass-seats-bar" aria-hidden="true"><i class="is-taken"></i><i class="is-taken"></i><i></i><i></i><i></i><i></i></div>
+                </div>
+                <dl class="pass-meta">
+                      <div><dt><i class="bi bi-people" aria-hidden="true"></i> Grupo</dt><dd>6 pers.</dd></div>
+                      <div><dt><i class="bi bi-binoculars" aria-hidden="true"></i> Cúpula</dt><dd>Compartida</dd></div>
+                      <div><dt><i class="bi bi-door-closed" aria-hidden="true"></i> Cabina</dt><dd>—</dd></div>
+                </dl>
+                <ul class="pass-features">
+                      <li>Itinerario completo de 12 horas</li>
+                      <li>Turno compartido en la Cúpula</li>
+                      <li>Brindis en la Galería G0</li>
+                      <li>Kit fotográfico de la misión</li>
+                </ul>
+              </div>
+              <footer class="pass-stub">
+                <div class="pass-stub-row">
+                  <span>AND-01 · Pase de abordar</span>
+                  <span class="pass-barcode" aria-hidden="true"></span>
+                </div>
+                <button type="button" class="btn btn-outline theme-primary w-100" data-bs-toggle="dialog" data-bs-target="#booking" data-mission="explorador">
+                  Elegir Explorador<i class="bi bi-chevron-right btn-arrow" aria-hidden="true"></i>
+                </button>
+              </footer>
+            </article>
+            <article class="pass is-featured is-picked" id="pass-comandante" data-pass="2" role="tabpanel" aria-labelledby="pick-comandante">
+              <div class="pass-top">
+                <div class="pass-row">
+                  <span class="pass-tier"><i class="bi bi-rocket-takeoff" aria-hidden="true"></i> Misión 02</span>
+                    <span class="pass-badge">Más elegida</span>
+                </div>
+                <h3 class="pass-name">Comandante</h3>
+                <p class="pass-tag">Grupo reducido y tiempo extra donde importa.</p>
+                <p class="pass-price">$420,000<small>USD</small></p>
+                <p class="pass-deposit">Apartas con $42,000 (10 %)</p>
+                <div class="pass-seats">
+                  <p class="pass-seats-label"><span>Lugares en esta ventana</span><span>Quedan <b>1 de 4</b></span></p>
+                  <div class="pass-seats-bar" aria-hidden="true"><i class="is-taken"></i><i class="is-taken"></i><i class="is-taken"></i><i></i></div>
+                </div>
+                <dl class="pass-meta">
+                      <div><dt><i class="bi bi-people" aria-hidden="true"></i> Grupo</dt><dd>4 pers.</dd></div>
+                      <div><dt><i class="bi bi-binoculars" aria-hidden="true"></i> Cúpula</dt><dd>30 min priv.</dd></div>
+                      <div><dt><i class="bi bi-door-closed" aria-hidden="true"></i> Cabina</dt><dd>Privada</dd></div>
+                </dl>
+                <ul class="pass-features">
+                      <li class="inc">Todo lo de Explorador</li>
+                      <li class="new">30 min privados en la Cúpula</li>
+                      <li class="new">Experimento propio en el Laboratorio</li>
+                      <li class="new">Cabina privada para descansar</li>
+                      <li class="new">Video profesional de tu misión</li>
+                </ul>
+              </div>
+              <footer class="pass-stub">
+                <div class="pass-stub-row">
+                  <span>AND-02 · Pase de abordar</span>
+                  <span class="pass-barcode" aria-hidden="true"></span>
+                </div>
+                <button type="button" class="btn btn-solid theme-primary w-100" data-bs-toggle="dialog" data-bs-target="#booking" data-mission="comandante">
+                  Elegir Comandante<i class="bi bi-chevron-right btn-arrow" aria-hidden="true"></i>
+                </button>
+              </footer>
+            </article>
+            <article class="pass" id="pass-cupula" data-pass="3" role="tabpanel" aria-labelledby="pick-cupula">
+              <div class="pass-top">
+                <div class="pass-row">
+                  <span class="pass-tier"><i class="bi bi-rocket-takeoff" aria-hidden="true"></i> Misión 03</span>
+                </div>
+                <h3 class="pass-name">Cúpula Privada</h3>
+                <p class="pass-tag">La estación a tu ritmo, para ti y un acompañante.</p>
+                <p class="pass-price">$780,000<small>USD</small></p>
+                <p class="pass-deposit">Apartas con $78,000 (10 %)</p>
+                <div class="pass-seats">
+                  <p class="pass-seats-label"><span>Lugares en esta ventana</span><span>Quedan <b>2 de 2</b></span></p>
+                  <div class="pass-seats-bar" aria-hidden="true"><i></i><i></i></div>
+                </div>
+                <dl class="pass-meta">
+                      <div><dt><i class="bi bi-people" aria-hidden="true"></i> Grupo</dt><dd>2 pers.</dd></div>
+                      <div><dt><i class="bi bi-binoculars" aria-hidden="true"></i> Cúpula</dt><dd>Exclusiva</dd></div>
+                      <div><dt><i class="bi bi-door-closed" aria-hidden="true"></i> Cabina</dt><dd>Suite</dd></div>
+                </dl>
+                <ul class="pass-features">
+                      <li class="inc">Todo lo de Comandante</li>
+                      <li class="new">Cena de atardecer en la Cúpula</li>
+                      <li class="new">Caminata espacial acompañada (45 min)</li>
+                      <li class="new">Comandante de cabina exclusivo</li>
+                </ul>
+              </div>
+              <footer class="pass-stub">
+                <div class="pass-stub-row">
+                  <span>AND-03 · Pase de abordar</span>
+                  <span class="pass-barcode" aria-hidden="true"></span>
+                </div>
+                <button type="button" class="btn btn-outline theme-primary w-100" data-bs-toggle="dialog" data-bs-target="#booking" data-mission="cupula">
+                  Elegir Cúpula Privada<i class="bi bi-chevron-right btn-arrow" aria-hidden="true"></i>
+                </button>
+              </footer>
+            </article>
+          </div>
+
+          <ul class="tickets-guarantees reveal">
+            <li><i class="bi bi-credit-card" aria-hidden="true"></i><p><b>Apartas con el 10 %</b><span>El resto, 90 días antes del vuelo</span></p></li>
+            <li><i class="bi bi-shield-check" aria-hidden="true"></i><p><b>Reembolso del 100 %</b><span>Si el lanzamiento se cancela</span></p></li>
+            <li><i class="bi bi-calendar-check" aria-hidden="true"></i><p><b>Cambio de fecha sin costo</b><span>Hasta 90 días antes</span></p></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================== 7 · CIERRE / CTA FINAL ===================== -->
+      <section class="section final-cta starfield" id="reserva" aria-labelledby="cta-title">
+        <div class="container reveal">
+          <!-- Final panel: the brightest box of the page (always lit) -->
+          <div class="final-panel">
+            <p class="eyebrow">Ventana de lanzamiento · Cierra en</p>
+            <p class="final-countdown" aria-hidden="true">T-<span data-final-days>000</span></p>
+            <h2 id="cta-title" class="mb-6">días para tu próxima bitácora.</h2>
+            <p class="lead-text mx-auto mb-9">Cada ventana lleva solo doce visitantes. Aparta tu lugar hoy.</p>
+            <button type="button" class="btn btn-solid theme-primary btn-lg" data-bs-toggle="dialog" data-bs-target="#booking">
+              Reservar mi lugar<i class="bi bi-chevron-right btn-arrow" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+      <div class="container d-flex flex-wrap gap-6 justify-content-between align-items-center">
+        <a href="#inicio" class="d-flex flex-column align-items-start gap-3">
+          <img
+            class="footer-logo"
+            src="images/andromeda-horizontal-para-fondo-oscuro.svg"
+            alt="Andromeda Station"
+            width="802"
+            height="190"
+            loading="lazy"
+          />
+          <span class="text-display">© 2026 · Bitácora de visita</span>
+        </a>
+        <nav aria-label="Pie de página">
+          <ul class="d-flex flex-wrap gap-6 list-unstyled m-0">
+            <li><a href="#itinerario">Itinerario</a></li>
+            <li><a href="#boletos">Boletos</a></li>
+            <li><a href="#inicio">Volver arriba ↑</a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- ===================== DIALOG · VISOR DE MÓDULOS ===================== -->
+    <dialog class="dialog module-viewer" id="module-viewer" aria-labelledby="module-viewer-title">
+      <div class="module-viewer-media">
+        <img class="module-viewer-img" data-mv-img src="images/registro/module-cupola-1400.webp" alt="Sala de observación con una gran ventana circular hacia la Tierra" width="1400" height="782" />
+        <button type="button" class="module-viewer-close" data-bs-dismiss="dialog" aria-label="Cerrar">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="dialog-body module-viewer-body">
+        <article class="module-viewer-text" aria-live="polite">
+          <span class="module-code" data-mv-code></span>
+          <h2 class="module-viewer-title" id="module-viewer-title" data-mv-title>Cúpula</h2>
+          <p class="module-viewer-detail" data-mv-detail></p>
+          <dl class="module-viewer-facts" data-mv-facts></dl>
+        </article>
+        <div class="module-viewer-nav">
+          <button type="button" class="orbit-arrow" data-mv-prev aria-label="Módulo anterior">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+          </button>
+          <span class="module-viewer-count"><b data-mv-index>01</b> / 04</span>
+          <button type="button" class="orbit-arrow" data-mv-next aria-label="Módulo siguiente">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- ===================== DIALOG · RESERVA ===================== -->
+    <!-- Booking: form (left) + boarding pass that fills in live (right). On submit the pass gets stamped. -->
+    <dialog class="dialog booking-dialog" id="booking" aria-labelledby="booking-title">
+      <button type="button" class="dialog-close-round" data-bs-dismiss="dialog" aria-label="Cerrar">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+
+      <div class="booking-layout">
+        <div class="booking-main">
+          <div class="booking-header">
+            <p class="eyebrow">Solicitud de abordaje</p>
+            <h2 class="booking-title" id="booking-title">Reserva tu misión</h2>
+          </div>
+
+          <form class="booking-form" data-booking-form novalidate>
+            <div class="booking-field">
+              <label class="booking-label" for="booking-name">Tripulante</label>
+              <input class="form-control" id="booking-name" name="name" type="text" autocomplete="name" placeholder="Como aparece en tu pasaporte" required minlength="3" data-pass-input="name" />
+              <p class="booking-error">Escribe tu nombre completo.</p>
+            </div>
+            <div class="booking-field">
+              <label class="booking-label" for="booking-email">Correo electrónico</label>
+              <input class="form-control" id="booking-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" required />
+              <p class="booking-error">Revisa tu correo: ahí te escribirá tu comandante.</p>
+            </div>
+
+            <fieldset class="booking-field">
+              <legend class="booking-label">Misión</legend>
+              <div class="booking-missions">
+                <label class="mission-option">
+                  <input type="radio" name="mission" value="explorador" data-pass-input="mission" />
+                  <span class="mission-name">Explorador</span>
+                  <span class="mission-price">$250K</span>
+                  <span class="mission-info">6 pers. · Cúpula compartida</span>
+                </label>
+                <label class="mission-option">
+                  <input type="radio" name="mission" value="comandante" checked data-pass-input="mission" />
+                  <span class="mission-badge">Más elegida</span>
+                  <span class="mission-name">Comandante</span>
+                  <span class="mission-price">$420K</span>
+                  <span class="mission-info">4 pers. · Cabina privada</span>
+                </label>
+                <label class="mission-option">
+                  <input type="radio" name="mission" value="cupula" data-pass-input="mission" />
+                  <span class="mission-name">Cúpula Privada</span>
+                  <span class="mission-price">$780K</span>
+                  <span class="mission-info">2 pers. · Suite</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="booking-field">
+              <legend class="booking-label">Ventana de lanzamiento</legend>
+              <div class="booking-windows">
+                <label class="window-option">
+                  <input type="radio" name="window" value="mar" checked data-pass-input="window" />
+                  <span class="window-date">14 Mar 2027</span>
+                  <span class="window-seats" data-seats="mar"></span>
+                </label>
+                <label class="window-option">
+                  <input type="radio" name="window" value="jun" data-pass-input="window" />
+                  <span class="window-date">20 Jun 2027</span>
+                  <span class="window-seats" data-seats="jun"></span>
+                </label>
+                <label class="window-option">
+                  <input type="radio" name="window" value="sep" data-pass-input="window" />
+                  <span class="window-date">18 Sep 2027</span>
+                  <span class="window-seats" data-seats="sep"></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="booking-summary" aria-live="polite">
+              <p><span>Apartas hoy con</span> <b data-summary="deposit">$42,000</b> <small>10 % · total <span data-summary="total">$420,000</span> USD</small></p>
+              <p class="booking-guarantee"><i class="bi bi-shield-check" aria-hidden="true"></i> Reembolso del 100 % si el lanzamiento se cancela</p>
+            </div>
+
+            <button type="submit" class="btn btn-solid theme-primary w-100 booking-submit">
+              <i class="bi bi-rocket-takeoff" aria-hidden="true"></i> Confirmar abordaje
+            </button>
+          </form>
+
+          <div class="booking-success" data-booking-success hidden>
+            <p class="eyebrow">Transmisión recibida</p>
+            <p class="booking-title">Tu pase está en órbita.</p>
+            <p class="body-text">Un comandante de misión te escribirá en menos de 48 horas a <b data-success-email></b> para apartar tu lugar.</p>
+            <button type="button" class="btn btn-outline theme-primary" data-bs-dismiss="dialog">Volver a la bitácora</button>
+          </div>
+        </div>
+
+        <!-- Live boarding pass (decorative copy of the form data) -->
+        <aside class="bpass" data-bpass data-mission="comandante" aria-label="Vista previa del pase de abordar" aria-hidden="true">
+          <div class="bpass-top">
+            <div class="bpass-head">
+              <img class="bpass-logo" src="images/andromeda-horizontal-para-fondo-oscuro.svg" alt="" width="140" height="40" />
+              <span class="bpass-kind">Pase de abordar</span>
+            </div>
+            <p class="bpass-label">Tripulante</p>
+            <p class="bpass-name" data-bpass-name>Tu nombre aquí</p>
+            <div class="bpass-route">
+              <div><b>TIERRA</b><span>Plataforma A-2</span></div>
+              <i class="bi bi-rocket-takeoff"></i>
+              <div><b>ÓRBITA</b><span>408 km</span></div>
+            </div>
+            <dl class="bpass-grid">
+              <div><dt>Misión</dt><dd data-bpass-mission>Comandante</dd></div>
+              <div><dt>Vuelo</dt><dd data-bpass-flight>AND‑214</dd></div>
+              <div><dt>Fecha</dt><dd data-bpass-date>14 MAR 2027</dd></div>
+              <div><dt>Hora</dt><dd>06:00</dd></div>
+              <div><dt>Puerta</dt><dd>A-2</dd></div>
+              <div><dt>Asiento</dt><dd data-bpass-seat>—</dd></div>
+            </dl>
+          </div>
+          <div class="bpass-stub">
+            <div>
+              <p class="bpass-label">Total</p>
+              <p class="bpass-total" data-bpass-total>$420,000 <small>USD</small></p>
+            </div>
+            <span class="pass-barcode"></span>
+          </div>
+          <p class="bpass-stamp">Aprobado</p>
+        </aside>
+      </div>
+    </dialog>
+
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/main.js?v=20261030t" defer></script>
+  </body>
+</html>

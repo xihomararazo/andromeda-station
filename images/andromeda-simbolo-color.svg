@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120.00 120.00" width="120" height="120"><title></title><g transform="translate(0.00 0.00) scale(1.00000)">
+<defs><mask id="cuts" maskUnits="userSpaceOnUse" x="-10" y="-10" width="140" height="140"><rect x="-10" y="-10" width="140" height="140" fill="#fff"/><circle cx="103.7" cy="53.8" r="10" fill="#000"/></mask></defs>
+<g mask="url(#cuts)" fill="none">
+<circle cx="60" cy="60" r="52" stroke="#0A1428" stroke-width="5"/>
+<path d="M34 88 L60 30 L86 88" stroke="#0A1428" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="60" cy="68" rx="46" ry="13" transform="rotate(-18 60 68)" stroke="#FFC233" stroke-width="3.5"/>
+</g>
+<circle cx="103.7" cy="53.8" r="7" fill="#FFC233"/>
+</g></svg>
